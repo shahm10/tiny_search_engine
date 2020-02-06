@@ -1,7 +1,7 @@
-# Your name
+# Seung Hyun Hahm
 ## CS50 Winter 2020, Tiny Search Engine
 
-GitHub username:
+GitHub username: shahm10 
 
 To build, run `make`.
 
