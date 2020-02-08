@@ -8,7 +8,7 @@
 
 //pagesaver - check whether the pathname is a pageDirectory and writable 
 /* Short Description: 
-pagedir.h checks whether the pathname provided is a valid directory and is writable. 
+pagedir.c checks whether the pathname provided is a valid directory and is writable. 
 It saves the webpage in the directory.
 It saves the webage's URL, depth, and HTML
 */

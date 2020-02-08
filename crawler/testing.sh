@@ -10,9 +10,11 @@
 
 # Define variables
 seedURL=http://old-www.cs.dartmouth.edu/~cs50/data/tse/letters/index.html
-seedURL2 =http://old-www.cs.dartmouth.edu/~cs50/index.html
-seedURL_crossed =http://old-www.cs.dartmouth.edu/~cs50/data/tse/toscrape/index.html
+
+seedURL2=http://old-www.cs.dartmouth.edu/~cs50/index.html
+
 externalURL=www.google.com
+
 
 #####################################
 ### These tests should fail ###
@@ -59,6 +61,7 @@ echo "Invalid depth "
 
 ######################################
 ### These tests should pass ####
+echo " "
 echo " Now these tests should pass"
 
 echo " At depth 0"
@@ -90,36 +93,29 @@ echo "At depth 1a it should pass"
 ./crawler $seedURL TEST 1a
 
 
-echo " Now testing with different seedURL in different directory"
+echo " With test2: testing with different seedURL in different directory"
 mkdir TEST2
+echo "TEST2 directory created"
 
-echo "At depth 1"
+echo "With a seedURL_crossed: TEST2"
 ./crawler $seedURL2 TEST2 1
 
 echo " At depth 2"
 ./crawler $seedURL2 TEST2 2
 
-# at depth 1
-echo " At depth 1"
-./crawler $seedURL_crossed TEST2 1
-
-# at depth 2
-echo " At depth 2"
-./crawler $seedURL TEST2 2
-
-# at depth 3
 echo "At depth 3"
-./crawler $seedURL TEST2 3
+./crawler $seedURL2 TEST2 3
 
-# at depth 4
 echo "At depth 4"
-./crawler $seedURL TEST2 4
+./crawler $seedURL2 TEST2 4
 
-# at depth 5
-echo " At depth 5"
-./crawler $seedURL TEST2 5
+echo "At depth 5"
+./crawler $seedURL2 TEST2 5
 
+# If everything is done correctly
+echo "SUCCESS!"
 
 ### etc.
 echo "Testing if there are memory leaks"
-valgrind --leak-check=full ./crawler $seedURL TEST 3
+echo "sample Memory leak"
+valgrind --leak-check=full ./crawler $seedURL TEST 2

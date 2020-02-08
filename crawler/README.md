@@ -13,10 +13,12 @@
 
 ### Usage
 First need to create a directory inside the `crawler/` directory by typing `mkdir [directoryname]`
+`./crawler seedURL pageDirectory maxDepth`
 
 ### Assumption
 Creating a directory before compiling or running is essential. 
 Only use internal URL
+Delete the directory you used 
 
 ### Compilation
 
