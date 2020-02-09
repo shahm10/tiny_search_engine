@@ -26,5 +26,7 @@ To compile, type `make`
 To clean, type `make clean`
 
 ### ETC
+In `testing.sh` testing for Wikipedia page is not included. However, I did run it in the program and it was verified that the fils created match expectations. I simply did not include them because it takes too much time. 
+
 Further information is found in [IMPLEMENTATION.md]
 
