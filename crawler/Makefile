@@ -4,6 +4,8 @@
 # Function: Build everything from the top-level directory by 'make'
 # clean up everything by typing m'make clean'
 
+#These are the variables 
+
 # need path to get to common
 C = ../common
 #library name 
@@ -22,6 +24,7 @@ LIBS = $(L)/libcs50-given.a $(C)/common.a
 
 # tells the compiler to lookk for include files in the directoreis 
 #FLAGS = # -DAPPTEST # - DMEMTEST
+# above are the macros 
 
 CFLAGS = -Wall -pedantic -std=c11 -ggdb $(FLAGS) -I $(L) -I $(C)
 CC = gcc
@@ -31,20 +34,25 @@ MAKE = make
 
 ######default#####
 #all: $(PROGS)
-
+#it runs by order <- make ('all')
 ######crawler#####
+#left side is a target; right side is the dependencies 
+#@ = automatic variable 
 crawler: crawler.o
 		$(CC) $(CFLAGS) $^ $(LIBS) -o $@
 
 ######crawler dependencies#####
+#These are recommended 
 #crawler.o: $(L)/webpage.h $(C)/pagedir.h
 #	$(L)/memory.h $(L)/bag.h $(L)/hashtable.h 
 
+#bash -v = verbose 
 test: $(PROGS) testing.sh
 	bash testing.sh
 	
-
+#include rm -f core 
 clean:
+	rm -f core 
 	rm -f *~ *.o *.dSYM
 	rm -f $(PROGS)
 	rm -f stocks

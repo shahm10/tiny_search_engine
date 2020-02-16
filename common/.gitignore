@@ -2,3 +2,4 @@
 core 
 .DS_Store 
 
+#ignore the binary files (libraries, executables) in this directory 

@@ -6,17 +6,49 @@
  *
  */
 
-//pagesaver - check whether the pathname is a pageDirectory and writable 
-/* Short Description: 
-pagedir.c checks whether the pathname provided is a valid directory and is writable. 
-It saves the webpage in the directory.
-It saves the webage's URL, depth, and HTML
-*/
 
 #include "pagedir.h"
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include "webpage.h"
+#include "file.h"
+
+// for loading pages from a crawler output directory 
+// if it can open a file dir/.crawler for reading then dir is a cralwer-produced diectory. 
+// if not, it's not a crawler  produced direcotry 
+bool isCrawlerDirectory (char *dir) {
+    if (dir == NULL) {
+        return false;
+    }
+
+    FILE *fp;
+    char crawler_dir[200];
+    //assume there is a .crawler inside the testdir 
+    sprintf (crawler_dir, "%s/.crawler", dir);
+    fp = fopen (crawler_dir, "r");
+    if (fp != NULL) {
+        fclose(fp);
+        return true;
+    } else {
+        return false; 
+    }
+
+}
+
+webpage_t *pagedir_load (FILE *fp) {
+
+    char *url = freadlinep(fp);
+    char *depth = freadlinep(fp);
+    char *html = freadfilep(fp);
+
+    //Gets the data from the valid FILE 
+    webpage_t *word_page = webpage_new (url, atoi(depth), html);
+
+    free (depth);
+    return word_page;
+    
+}
 
 bool pagesaver (webpage_t *page, char *pageDirectory, int ID) {
     //first, check for valid conditions
@@ -44,5 +76,4 @@ bool pagesaver (webpage_t *page, char *pageDirectory, int ID) {
     }
 
     return true; 
-
 }

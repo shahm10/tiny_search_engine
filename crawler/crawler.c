@@ -4,7 +4,6 @@ crawls the web and retrieves webpages straring from a "seed" URL
 - extracts any embedded URLs
 - retrieves each of those pages
 - limit its exploration to a given "depth"
-
 execute from a command line
     ./crawler seedURL pageDirectory maxDepth 
 */
@@ -110,7 +109,7 @@ void crawler (char *seedURL, char *pageDirectory, int maxdepth) {
             //pagesaver to write the webpage to pageDirectory with ID
             if (!pagesaver(cPage, pageDirectory, ID)) {
                 printf ("page not saved");
-            }
+            } 
 
              //else continue
         } else {

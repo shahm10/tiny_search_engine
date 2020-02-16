@@ -7,3 +7,5 @@ To build, run `make`.
 
 To clean up, run `make clean`.
 
+In indexer/ I included indexsort.awk to use it for my testing
+
