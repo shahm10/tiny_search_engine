@@ -26,12 +26,6 @@ function: loads the index into memeory (a data structure we devleoped for the in
 and then prompts the user for queries 
 
 queries = comprised of words, with optional and/or operators 
-
-computer science
-computer and science
-computer or science
-// ./querier ../crawler_dir index_file
-./querier pageDirectory indexFilename
 */
 
 typedef struct query {
@@ -46,14 +40,7 @@ typedef struct scoreID {
 
 typedef struct scoreofarray {
     score_t **Array;
-    // score_t *element;
-    //int num;
 } array_t; 
-
-// typedef struct scorearray {
-//     score_t **array; //array of scoreID
-//     score_t *elements; //each (ID, score)
-// } scorearray_t;
 
 char** sep_words (char* input, int *);
 void make_lower(char **array);
@@ -62,8 +49,6 @@ int countwords (char **words);
 int andorcheck (char *words[], int size);
 int countfiles (char *pageDirectory);
 counters_t *findindex (index_t *index, const char *word);
-//score_t *scorelist (counters_t *final, int filenum);
-//score_t *score_new (counters_t *final, int filenum);
 counters_t *scores (char **words, int countwords, index_t *index);
 void union_iterator (void *arg, const int key, int count);
 void counters_union (counters_t *word1, counters_t *word2);
@@ -74,28 +59,7 @@ void counters_intersect (counters_t* ct1, counters_t* ct2);
 int compare (const void *firstobject, const void *secondobject);
 void countdocuments (void *arg, const int key, const int count);
 array_t *scorearray (counters_t *result, int documents, int file_num);
-
-
-
-
-
-
-
-
-
-
-
-// #ifndef __QUERIOR_H
-// #define __QUERIOR_H
-
-
-
-
-
-
-
-// #endif // __QUERIOR_H
-
+array_t *sortrank (array_t *completearray, int documents);
 
 
 int main (const int argc, char *argv[]) {
@@ -133,12 +97,10 @@ int main (const int argc, char *argv[]) {
     index_t *index = index_new(slots);
     
     indexLoad (indexfile, index); 
-    // hashtable_print (index->hashtable, stdout, printhash);
-    
+
     char **words;
     char *input;
     int count;
-    // int inputstatus;
     printf ("Query? ");
     
     //1. check if input is correct 
@@ -171,8 +133,8 @@ int main (const int argc, char *argv[]) {
             }
             printf ("Matches %d documents (ranked): \n", documents);
 
-            array_t *rankedscores = scorearray(result, documents, file_num);
-            qsort(rankedscores->Array, documents, sizeof(score_t), compare);
+            array_t *rankedscore = scorearray(result, documents, file_num);
+            array_t *rankedscores = sortrank (rankedscore, documents);
 
             for (int i = 0; i < documents; i++) {
                 int ID = rankedscores->Array[i]->ID;
@@ -349,14 +311,6 @@ int countfiles (char *pageDirectory) {
     return (ID -1);
 }
 
-
-/*run query()
-1. find the counters for each key word
-2. union or intersection
-3. sort
-4. print
-*/
-
 //iterate over one set and for each item
 // check whether the document exists in the other set
 //update the first set according to what you find 
@@ -468,24 +422,18 @@ counters_t *scores (char **words, int countwords, index_t *index) {
 
 array_t *scorearray (counters_t *result, int documents, int file_num) {
     array_t *completearray = calloc (documents, sizeof(score_t)); //contains array and elements
-
-    //score_t *element = malloc (sizeof(score_t));
-
     completearray->Array = calloc (documents, sizeof(score_t));
 
-    
-
-    int i = 0;
-    //completearray->Array = result;
     if (completearray == NULL) {
         fprintf (stderr, "\n can't allocate memory\n");
     }
 
     int space = 0;
 
-    for (i = 1; i <= file_num; i++) {
+    for (int i = 1; i <= file_num; i++) {
         int score = counters_get(result, i); 
         if (score > 0) {
+
             score_t *final = malloc(sizeof(score_t));
             final->ID = i;
             final->score = score;
@@ -497,18 +445,29 @@ array_t *scorearray (counters_t *result, int documents, int file_num) {
 
         }
     }
-    qsort(completearray->Array, documents, sizeof(score_t), compare);
-    //qsort(completearray->Array, documents, sizeof(score_t), compare);
-
     return completearray;
 }
+array_t *sortrank (array_t *completearray, int documents) {
+    printf ("\nInside the sorting\n");
 
-int compare (const void *firstobject, const void *secondobject) {
+    score_t *element = malloc (sizeof(score_t));
 
-    score_t *firstscore = firstobject->Array;
-    score_t *secondscore = (score_t**) secondobject;
+    if (element == NULL) {
+        fprintf (stderr, "\n can't allocate memory");
+    }
 
-    return (secondscore->score - firstscore->score);
+
+    for (int i = 0; i < (documents - 1); i++) {
+        //descending order
+        for (int j = i+1; (documents - j); j++) {
+            if (completearray->Array[i]->score < completearray->Array[j]->score) {
+                element = completearray->Array[i];
+                completearray->Array[i] = completearray->Array[j];
+                completearray->Array[j] = element;
+            }
+        }
+    }
+    return completearray;
 }
 
 //check how many document match exist
