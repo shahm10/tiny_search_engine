@@ -105,7 +105,7 @@ int main (const int argc, char *argv[]) {
         //checks if the inputstatus is correct: 1 means it is correct
         int status = inputstatus (input);
         if (status == 2) {
-            printf ("\n no alphabet");
+            printf ("\nError: bad character is in the query! ");
             // break;
         }
         if ((status == 1)) {
@@ -113,7 +113,7 @@ int main (const int argc, char *argv[]) {
             //Then it goes to check for "and" and "or" errors 
             // words are the character array 
             words = sep_words (input, &count);
-            printf ("\n print clean query\n");
+            //printf ("\n Print clean query\n");
             for (int j = 0; j < count; j++) {
                 printf ("%s ", words[j]);
             }
@@ -138,7 +138,7 @@ int main (const int argc, char *argv[]) {
                 //If there are documents that match 
                 //print the number of documents that match 
                 else { 
-                    printf ("Matches %d documents (ranked): \n", documents);
+                    printf ("\nMatches %d documents (ranked): \n \n", documents);
                 
                     //create an array of scores 
                     array_t *rankedscore = scorearray(result, documents, file_num);
@@ -156,7 +156,7 @@ int main (const int argc, char *argv[]) {
                         FILE *fp = fopen (filename, "r");
                         char *url = freadlinep(fp);
 
-                        printf ("\nScore: %3d  doc:  %3d: %s\n", scores, ID, url);
+                        printf ("Score: %3d  doc:  %3d: %s\n", scores, ID, url);
 
                         fclose(fp);
                         free(url);
@@ -173,7 +173,9 @@ int main (const int argc, char *argv[]) {
                 free (words);
             }
         free (input);
+        printf ("\n----------------------------------------\n\n");
         printf ("\nQuery?: ");
+       
         }
         free(input);
         index_delete(index);
@@ -250,7 +252,8 @@ int inputstatus (char *input) {
         }
         //only if it sees a non-space non-alphabet character
         if (!isalpha (start[i]) && !isspace (start[i])) {
-            inputstatus = 2;            
+            inputstatus = 2;   
+            break;         
         }
     }
     return inputstatus;
@@ -262,8 +265,6 @@ int countwords (char **words) {
     for (int i = 0; (words[i] != NULL); i++) {
         numofwords++;
     }
-
-    //printf ("%d", numofwords);
 
     return numofwords; 
 }
@@ -313,7 +314,6 @@ int andorcheck (char *words[], int size) {
             }
         }
     }
-    printf ("%d", exitand);
     return exitand;
 }
 
@@ -388,10 +388,7 @@ void union_iterator (void *arg, const int key, int count) {
 counters_t *scores (char **words, int countwords, index_t *index) {
 
     //set very 1st word's counter into result
-    //treat all as 'ands' and find minimum and then look for or 
-
-    printf ("inside the scores\n");
-    
+    //treat all as 'ands' and find minimum and then look for or     
     counters_t *result = counters_new();
     if (result == NULL) {
         fprintf (stderr, "Memory not correctly allocated\n");
@@ -408,11 +405,11 @@ counters_t *scores (char **words, int countwords, index_t *index) {
         //0 means it is equal 
         if (strcmp (words[i], "and") == 0) {
             //do nothing
-            printf ("\n do nothing\n");
+            //printf ("\n do nothing\n");
         }
         //if it sees an "or"
         else if (strcmp (words[i], "or") == 0) {
-            printf ("\n OR is detected\n");
+            //printf ("\n OR is detected\n");
             empty = true;
             counters_union (result, temp);
             counters_delete(temp);
@@ -420,9 +417,8 @@ counters_t *scores (char **words, int countwords, index_t *index) {
         //if it does not see and "or" or "and"
         else {
             if (empty) {
-                printf ("\n empty is detected\n");
+                //printf ("\n empty is detected\n");
                 counters_t *current = findindex (index, words[i]);
-                counters_print (current, stdout);
                 temp = counters_new();
                 if (current != NULL) {
                     counters_union(temp, current); 
@@ -442,7 +438,7 @@ counters_t *scores (char **words, int countwords, index_t *index) {
     //free the temp counters
     counters_delete (temp);
 
-    printf ("\n printing the result\n");
+    //printf ("\n printing the result\n");
     // counters_print (result, stdout);
     return result;
 
