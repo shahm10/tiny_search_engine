@@ -1,6 +1,13 @@
 /* 
- * indexer.c -builds an index from the index data structure 
- * inspired by code given for activity in lecture 24
+ * querier.c -builds an index from the index data structure 
+ * 
+ * inspired by code given for activity in lecture iterator
+ * 
+ * usage: ./querier pageDirectory indexfile
+ * 
+ * brief description: loads the index into memory (a data structure we devleoped for the indexer)
+and then prompts the user for queries 
+ * 
  * Seung Hyun Hahm - February 2020
  */
 
@@ -19,15 +26,8 @@
 #include <unistd.h>
 #include "file.h"
 
-/* process a query and ranking the results are tricky 
-start with a simplified test
 
-function: loads the index into memeory (a data structure we devleoped for the indexer)
-and then prompts the user for queries 
-
-queries = comprised of words, with optional and/or operators 
-*/
-
+/* first define and construct the structure */
 typedef struct query {
     counters_t *result;
     counters_t *temp;
@@ -52,15 +52,11 @@ counters_t *findindex (index_t *index, const char *word);
 counters_t *scores (char **words, int countwords, index_t *index);
 void union_iterator (void *arg, const int key, int count);
 void counters_union (counters_t *word1, counters_t *word2);
-query_t *query_new (counters_t *word1, counters_t *word2);
-counters_t *findindex (index_t *index, const char *word);
 void intersect_iterator (void *arg, const int key, int count);
 void counters_intersect (counters_t* ct1, counters_t* ct2);
-int compare (const void *firstobject, const void *secondobject);
-void countdocuments (void *arg, const int key, const int count);
+void countmatch (void *arg, const int key, const int count);
 array_t *scorearray (counters_t *result, int documents, int file_num);
 array_t *sortrank (array_t *completearray, int documents);
-
 
 
 int main (const int argc, char *argv[]) {
@@ -134,7 +130,7 @@ int main (const int argc, char *argv[]) {
                 counters_t *result = scores (words, size, index);
                 //count the number of results
                 int documents = 0; 
-                counters_iterate(result, &documents, countdocuments);
+                counters_iterate(result, &documents, countmatch);
 
                 //if no documents match 
                 if (documents == 0) {
@@ -187,12 +183,12 @@ int main (const int argc, char *argv[]) {
         return 0;
 }
 
-//check whether the input is correct
-// int correct (char *input) {
-//     char 
+/************** Helper Functions ***********/
+/* brief description is written above each helper functions
+more specific details can be foun din IMPLEMENTATION.md */
 
-
-//only return the characters 
+//Separate the individual words into an array
+//Only make a character array 
 char** sep_words (char* input, int * num) {
     //set array of char*
     char** words; 
@@ -227,6 +223,7 @@ char** sep_words (char* input, int * num) {
     return words; 
 }
 
+//Convert all the characters into lower case. 
 void make_lower(char **array)
 {   
     int i = 0, j;
@@ -240,7 +237,7 @@ void make_lower(char **array)
     }
 }    
 
-//checks if the input is valid without and and or 
+//checks if the input is valid without 'and' and 'or' 
 int inputstatus (char *input) {
     int inputstatus = 0;
     char *start = input;
@@ -262,7 +259,7 @@ int inputstatus (char *input) {
     return inputstatus;
 }
 
-//count words
+//Counts the number of words in the array 
 int countwords (char **words) {
     int numofwords = 0;
     for (int i = 0; (words[i] != NULL); i++) {
@@ -274,7 +271,7 @@ int countwords (char **words) {
     return numofwords; 
 }
 
-//and function
+//Checks whether the stdin input has valid conditions of implementing "and" and "or"
 int andorcheck (char *words[], int size) {
     int exitand = 0;
 
@@ -323,6 +320,7 @@ int andorcheck (char *words[], int size) {
     return exitand;
 }
 
+//Count the number of files inside the pageDirectory inside the crawler directory 
 int countfiles (char *pageDirectory) {
     FILE *fp;
     char crawlerfiles [200];
@@ -340,14 +338,13 @@ int countfiles (char *pageDirectory) {
     return (ID -1);
 }
 
-//iterate over one set and for each item
-// check whether the document exists in the other set
-//update the first set according to what you find 
 
+//Returns the minimum number of two numbers
 static inline int min (const int a, const int b) {
     return (a < b ? a : b);
 }
 
+//Compares the counters associated with given words and return the counter assoicated with the minimum score. 
 void counters_intersect (counters_t* ct1, counters_t* ct2) {
 
     query_t query_new = {ct1, ct2};
@@ -355,14 +352,13 @@ void counters_intersect (counters_t* ct1, counters_t* ct2) {
     counters_iterate (ct1, &query_new, intersect_iterator);
 }
 
+//A helper function for the counters_intersect 
 void intersect_iterator (void *arg, const int key, int count) {
 
     query_t *query = arg; 
-    //query->result; query->other
 
     //save the minimum count to the set
     //update the first set according to what you find 
-    //int min_count = counters_get (query->result, key);
     counters_set (query->result, key, min(count, counters_get (query->temp, key)));
 }
 
@@ -379,6 +375,7 @@ void counters_union (counters_t *word1, counters_t *word2) {
 
 }
 
+//A helper function to iterate thorough the above function: counters_union
 void union_iterator (void *arg, const int key, int count) {
     query_t *query = arg;
 
@@ -390,7 +387,7 @@ void union_iterator (void *arg, const int key, int count) {
     }
 }
 
-
+//Calculate the scores inside the words in the query
 counters_t *scores (char **words, int countwords, index_t *index) {
 
     //set very 1st word's counter into result
@@ -423,6 +420,7 @@ counters_t *scores (char **words, int countwords, index_t *index) {
             counters_union (result, temp);
             counters_delete(temp);
         }
+        //if it does not see and "or" or "and"
         else {
             if (empty) {
                 printf ("\n empty is detected\n");
@@ -444,25 +442,27 @@ counters_t *scores (char **words, int countwords, index_t *index) {
     }
 
     counters_union (result, temp);
+    //free the temp counters
     counters_delete (temp);
 
     printf ("\n printing the result\n");
-    counters_print (result, stdout);
+    // counters_print (result, stdout);
     return result;
 
     counters_delete(result);
 }
 
 
+//Returns the entire array of the counter result with each key as the document ID. 
 array_t *scorearray (counters_t *result, int documents, int file_num) {
     array_t *completearray = calloc (documents, sizeof(score_t)); //contains array and elements
     completearray->Array = calloc (documents, sizeof(score_t));
 
     if (completearray == NULL) {
-        fprintf (stderr, "\n can't allocate memory\n");
+        fprintf (stderr, "\n Cannot allocate memory \n");
     }
     if (completearray->Array == NULL) {
-        fprintf (stderr, "can't either");
+        fprintf (stderr, "Cannot allocate memory\n");
     }
 
     int space = 0;
@@ -470,6 +470,7 @@ array_t *scorearray (counters_t *result, int documents, int file_num) {
     for (int i = 1; i <= file_num; i++) {
         int score = counters_get(result, i); 
 
+        //Only create an array if the associated score is greater than 0
         if (score > 0) {
             score_t *final = malloc(sizeof(score_t));
 
@@ -486,12 +487,14 @@ array_t *scorearray (counters_t *result, int documents, int file_num) {
     return completearray;
 }
 
+//Sorts the completearray into a descending order based on the score 
 array_t *sortrank (array_t *completearray, int documents) {
-    printf ("\nInside the sorting\n");
+    // printf ("\nInside the sorting\n");
 
     for (int i = 0; i < (documents - 1); i++) {
         //descending order
         for (int j = i+1; (documents - j); j++) {
+            //Use index sort 
             if (completearray->Array[i]->score < completearray->Array[j]->score) {
                 score_t *element = completearray->Array[i];
                 completearray->Array[i] = completearray->Array[j];
@@ -499,13 +502,12 @@ array_t *sortrank (array_t *completearray, int documents) {
             }
         }
     }
-    // free (element);
     return completearray;
 
 }
 
 //check how many document match exist
-void countdocuments (void *arg, const int key, const int count) {
+void countmatch (void *arg, const int key, const int count) {
     //skip when it is 0 
     if (count > 0 ) {
         int *documents = arg;
