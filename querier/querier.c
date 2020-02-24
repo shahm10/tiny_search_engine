@@ -62,6 +62,7 @@ array_t *scorearray (counters_t *result, int documents, int file_num);
 array_t *sortrank (array_t *completearray, int documents);
 
 
+
 int main (const int argc, char *argv[]) {
     FILE *indexfile;
     //index delete at the end 
@@ -102,58 +103,77 @@ int main (const int argc, char *argv[]) {
     char *input;
     int count;
     printf ("Query? ");
-    
+
     //1. check if input is correct 
     while ((input = freadlinep (stdin)) != NULL) {
-        printf("input: %s\n",input);
+
+        //checks if the inputstatus is correct: 1 means it is correct
         int status = inputstatus (input);
+        if (status == 2) {
+            printf ("\n no alphabet");
+            break;
+        }
         if ((status == 1)) {
-            //if ignored all non-alphabets, read the input 
-            // then check for and and or 
+            //Read the input when it passes all conditions
+            //Then it goes to check for "and" and "or" errors 
             // words are the character array 
             words = sep_words (input, &count);
-            printf("\nPrinting Words!\n");
+            printf ("\n print clean query\n");
             for (int j = 0; j < count; j++) {
                 printf ("%s ", words[j]);
             }
 
            int size = countwords (words);
            int file_num = countfiles (argv[1]);
-           printf ("\n%d\n", size);
+
            //2. valid input check = and/or
-           andorcheck (words, size);
+           int exit = andorcheck (words, size);
+           //only if it passes the "andorcheck"
+           if (exit == 0) {
+                //create a counter result
+                counters_t *result = scores (words, size, index);
+                //count the number of results
+                int documents = 0; 
+                counters_iterate(result, &documents, countdocuments);
 
-            //if it passes andorcheck
-            counters_t *result = scores (words, size, index);
-            int documents = 0; 
-            counters_iterate(result, &documents, countdocuments);
+                //if no documents match 
+                if (documents == 0) {
+                    printf ("\nNo documents match. \n");
+                }
+                //print the number of documents that match 
+                printf ("Matches %d documents (ranked): \n", documents);
+                
+                //create an array of scores 
+                array_t *rankedscore = scorearray(result, documents, file_num);
+                //rank the array 
+                array_t *rankedscores = sortrank (rankedscore, documents);
 
-            if (documents == 0) {
-                printf ("\nNo match\n");
-            }
-            printf ("Matches %d documents (ranked): \n", documents);
+                //print the array 
+                for (int i = 0; i < documents; i++) {
+                    int ID = rankedscores->Array[i]->ID;
+                    int scores = rankedscores->Array[i]->score;
 
-            array_t *rankedscore = scorearray(result, documents, file_num);
-            array_t *rankedscores = sortrank (rankedscore, documents);
+                    char filename [200];
+                    sprintf (filename, "%s/%d", argv[1], ID);
 
-            for (int i = 0; i < documents; i++) {
-                int ID = rankedscores->Array[i]->ID;
-                int scores = rankedscores->Array[i]->score;
+                    FILE *fp = fopen (filename, "r");
+                    char *url = freadlinep(fp);
 
-                char filename [200];
-                sprintf (filename, "%s/%d", argv[1], ID);
+                    printf ("\nScore: %3d  doc:  %3d: %s\n", scores, ID, url);
 
-                FILE *fp = fopen (filename, "r");
-                char *url = freadlinep(fp);
-
-                printf ("Score: %3d  doc:  %3d: %s\n", scores, ID, url);
-
-                fclose(fp);
-                free(url);
+                    fclose(fp);
+                    free(url);
+                }
+                counters_delete(result);
             }
         }
-        printf ("\n Query?: ");
+        //free (words);
+        //free (input);
+        printf ("\nQuery?: ");
     }
+    free(input);
+    index_delete(index);
+
     fclose (indexfile);
     return 0;
 }
@@ -216,8 +236,6 @@ int inputstatus (char *input) {
     int inputstatus = 0;
     char *start = input;
 
-    printf ("\nin the loop");
-    
     for (int i = 0; start[i] != '\0'; i++){
         if (isalpha (start[i])) {
             inputstatus = 1;
@@ -225,10 +243,11 @@ int inputstatus (char *input) {
         if (isspace (start[i])) {
             inputstatus = 1;
         }
+        //only if it sees a non-space non-alphabet character
         if (!isalpha (start[i]) && !isspace (start[i])) {
             inputstatus = 2;
-            fprintf (stderr, "\nnon-alphabet letter detected \n");
-            exit (8);
+            // fprintf (stderr, "\nError: non-alphabet letter detected \n");
+            
         }
     }
     return inputstatus;
@@ -252,13 +271,14 @@ int andorcheck (char *words[], int size) {
 
      //if first word or last word is "and"; error
     if ((strcmp (words[0], "and") == 0) || (strcmp (words[0], "or") == 0)) {
-        fprintf (stderr, "AND or OR cannot come at front \n"); 
-        exit (9);
+        fprintf (stderr, "Error: AND or OR cannot come at front \n"); 
+        exitand = 1;
     }
     //if last word is and; error
 
     //can't have 'and' and 'or' together
     //check the back 
+    if (exitand != 1) {
     for (int i = (size - 1); i >= 0; i--) {
         if (words[i] != NULL) {
             if ((strcmp(words[i], "and") == 0) || (strcmp (words[i], "or") == 0)) {
@@ -272,20 +292,20 @@ int andorcheck (char *words[], int size) {
             }
         }
     }
-    if (exitand == 1) {
-        exit(8);
     }
-    //if not
-    for (int i = (size - 1); i >= 0; i--) {
-        if (words[i] != NULL) {
-            if ((strcmp (words[i], "and") == 0) || (strcmp (words[i], "or") == 0)) {
-                if ((strcmp (words[i-1], "and") == 0) || (strcmp (words[i-1], "or") == 0)) {
-                    fprintf (stderr, "and and or can't be together\n");
-                    exitand = 1;
-                    break;
-                }
-                else {
-                    exitand = 0;
+
+    if (exitand != 1){
+        for (int i = (size - 1); i >= 0; i--) {
+            if (words[i] != NULL) {
+                if ((strcmp (words[i], "and") == 0) || (strcmp (words[i], "or") == 0)) {
+                    if ((strcmp (words[i-1], "and") == 0) || (strcmp (words[i-1], "or") == 0)) {
+                        fprintf (stderr, "and and or can't be together\n");
+                        exitand = 1;
+                        break;
+                    }
+                    else {
+                        exitand = 0;
+                    }
                 }
             }
         }
@@ -370,6 +390,10 @@ counters_t *scores (char **words, int countwords, index_t *index) {
     printf ("inside the scores\n");
     
     counters_t *result = counters_new();
+    if (result == NULL) {
+        fprintf (stderr, "memory not correctly allocated\n");
+        exit (10);
+    }
     counters_t *temp;
 
 
@@ -413,10 +437,11 @@ counters_t *scores (char **words, int countwords, index_t *index) {
     counters_union (result, temp);
     counters_delete (temp);
 
-    //printf ("%d", &result);
     printf ("\n printing the result\n");
     counters_print (result, stdout);
     return result;
+
+    counters_delete(result);
 }
 
 
@@ -427,14 +452,19 @@ array_t *scorearray (counters_t *result, int documents, int file_num) {
     if (completearray == NULL) {
         fprintf (stderr, "\n can't allocate memory\n");
     }
+    if (completearray->Array == NULL) {
+        fprintf (stderr, "can't either");
+    }
 
     int space = 0;
 
     for (int i = 1; i <= file_num; i++) {
         int score = counters_get(result, i); 
+        score_t *final = malloc(sizeof(score_t));
+
         if (score > 0) {
 
-            score_t *final = malloc(sizeof(score_t));
+            //score_t *final = malloc(sizeof(score_t));
             final->ID = i;
             final->score = score;
             
@@ -442,11 +472,12 @@ array_t *scorearray (counters_t *result, int documents, int file_num) {
 
             space++;
 
-
         }
+       
     }
     return completearray;
 }
+
 array_t *sortrank (array_t *completearray, int documents) {
     printf ("\nInside the sorting\n");
 
@@ -468,6 +499,11 @@ array_t *sortrank (array_t *completearray, int documents) {
         }
     }
     return completearray;
+    for (int c = 0; c < documents; c++) {
+        free(completearray->Array[c]);
+    }
+    free(element);
+    free (completearray);
 }
 
 //check how many document match exist
@@ -478,3 +514,4 @@ void countdocuments (void *arg, const int key, const int count) {
         (*documents)++;
     }
 }
+
