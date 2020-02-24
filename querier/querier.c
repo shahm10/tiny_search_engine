@@ -122,8 +122,9 @@ int main (const int argc, char *argv[]) {
             for (int j = 0; j < count; j++) {
                 printf ("%s ", words[j]);
             }
+
             int size = countwords (words);
-           int file_num = countfiles (argv[1]);
+            int file_num = countfiles (argv[1]);
 
            //2. valid input check = and/or
            int exit = andorcheck (words, size);
@@ -139,51 +140,53 @@ int main (const int argc, char *argv[]) {
                 if (documents == 0) {
                     printf ("\nNo documents match. \n");
                 }
+                //If there are documents that match 
                 //print the number of documents that match 
-                printf ("Matches %d documents (ranked): \n", documents);
+                else { 
+                    printf ("Matches %d documents (ranked): \n", documents);
                 
-                //create an array of scores 
-                array_t *rankedscore = scorearray(result, documents, file_num);
-                //rank the array 
-                array_t *rankedscores = sortrank (rankedscore, documents);
+                    //create an array of scores 
+                    array_t *rankedscore = scorearray(result, documents, file_num);
+                    //rank the array 
+                    array_t *rankedscores = sortrank (rankedscore, documents);
 
-                //print the array 
-                for (int i = 0; i < documents; i++) {
-                    int ID = rankedscores->Array[i]->ID;
-                    int scores = rankedscores->Array[i]->score;
+                    //print the array 
+                    for (int i = 0; i < documents; i++) {
+                        int ID = rankedscores->Array[i]->ID;
+                        int scores = rankedscores->Array[i]->score;
 
-                    char filename [200];
-                    sprintf (filename, "%s/%d", argv[1], ID);
+                        char filename [200];
+                        sprintf (filename, "%s/%d", argv[1], ID);
 
-                    FILE *fp = fopen (filename, "r");
-                    char *url = freadlinep(fp);
+                        FILE *fp = fopen (filename, "r");
+                        char *url = freadlinep(fp);
 
-                    printf ("\nScore: %3d  doc:  %3d: %s\n", scores, ID, url);
+                        printf ("\nScore: %3d  doc:  %3d: %s\n", scores, ID, url);
 
-                    fclose(fp);
-                    free(url);
-                }
-                counters_delete(result);
-                    for (int c = 0; c < documents; c++) {
-                        free(rankedscores->Array[c]);
+                        fclose(fp);
+                        free(url);
+                        }
+                        
+                        for (int c = 0; c < documents; c++) {
+                            free(rankedscores->Array[c]);
+                        }
+                        free(rankedscores->Array);
+                        free (rankedscores);
                     }
-                   
-                    free(rankedscores->Array);
-                free (rankedscores);
+                    counters_delete(result);
+                }
+                free (words);
             }
-        
-        free (words);
-        }
         free (input);
         printf ("\nQuery?: ");
-    }
-    free(input);
-    index_delete(index);
+        }
+        free(input);
+        index_delete(index);
 
-    fclose (indexfile);
-    return 0;
+        fclose (indexfile);
+        return 0;
 }
- 
+
 //check whether the input is correct
 // int correct (char *input) {
 //     char 
