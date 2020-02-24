@@ -48,7 +48,6 @@ int inputstatus (char *input);
 int countwords (char **words);
 int andorcheck (char *words[], int size);
 int countfiles (char *pageDirectory);
-counters_t *findindex (index_t *index, const char *word);
 counters_t *scores (char **words, int countwords, index_t *index);
 void union_iterator (void *arg, const int key, int count);
 void counters_union (counters_t *word1, counters_t *word2);
@@ -63,7 +62,7 @@ int main (const int argc, char *argv[]) {
     FILE *indexfile;
     //index delete at the end 
 
-    
+    //incorrect number of inputs
     if (argc != 3) {
         fprintf (stderr, "Usage: ./querier [pageDirectory] [indexFilename] \n");
         exit (1);
@@ -251,9 +250,7 @@ int inputstatus (char *input) {
         }
         //only if it sees a non-space non-alphabet character
         if (!isalpha (start[i]) && !isspace (start[i])) {
-            inputstatus = 2;
-            // fprintf (stderr, "\nError: non-alphabet letter detected \n");
-            
+            inputstatus = 2;            
         }
     }
     return inputstatus;
@@ -397,8 +394,8 @@ counters_t *scores (char **words, int countwords, index_t *index) {
     
     counters_t *result = counters_new();
     if (result == NULL) {
-        fprintf (stderr, "memory not correctly allocated\n");
-        exit (10);
+        fprintf (stderr, "Memory not correctly allocated\n");
+        exit (6);
     }
     counters_t *temp;
 
@@ -460,9 +457,11 @@ array_t *scorearray (counters_t *result, int documents, int file_num) {
 
     if (completearray == NULL) {
         fprintf (stderr, "\n Cannot allocate memory \n");
+        exit (4);
     }
     if (completearray->Array == NULL) {
         fprintf (stderr, "Cannot allocate memory\n");
+        exit (5);
     }
 
     int space = 0;
