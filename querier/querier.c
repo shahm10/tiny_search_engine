@@ -111,7 +111,7 @@ int main (const int argc, char *argv[]) {
         int status = inputstatus (input);
         if (status == 2) {
             printf ("\n no alphabet");
-            break;
+            // break;
         }
         if ((status == 1)) {
             //Read the input when it passes all conditions
@@ -122,8 +122,7 @@ int main (const int argc, char *argv[]) {
             for (int j = 0; j < count; j++) {
                 printf ("%s ", words[j]);
             }
-
-           int size = countwords (words);
+            int size = countwords (words);
            int file_num = countfiles (argv[1]);
 
            //2. valid input check = and/or
@@ -165,10 +164,17 @@ int main (const int argc, char *argv[]) {
                     free(url);
                 }
                 counters_delete(result);
+                    for (int c = 0; c < documents; c++) {
+                        free(rankedscores->Array[c]);
+                    }
+                   
+                    free(rankedscores->Array);
+                free (rankedscores);
             }
+        
+        free (words);
         }
-        //free (words);
-        //free (input);
+        free (input);
         printf ("\nQuery?: ");
     }
     free(input);
@@ -460,11 +466,10 @@ array_t *scorearray (counters_t *result, int documents, int file_num) {
 
     for (int i = 1; i <= file_num; i++) {
         int score = counters_get(result, i); 
-        score_t *final = malloc(sizeof(score_t));
 
         if (score > 0) {
+            score_t *final = malloc(sizeof(score_t));
 
-            //score_t *final = malloc(sizeof(score_t));
             final->ID = i;
             final->score = score;
             
@@ -481,29 +486,19 @@ array_t *scorearray (counters_t *result, int documents, int file_num) {
 array_t *sortrank (array_t *completearray, int documents) {
     printf ("\nInside the sorting\n");
 
-    score_t *element = malloc (sizeof(score_t));
-
-    if (element == NULL) {
-        fprintf (stderr, "\n can't allocate memory");
-    }
-
-
     for (int i = 0; i < (documents - 1); i++) {
         //descending order
         for (int j = i+1; (documents - j); j++) {
             if (completearray->Array[i]->score < completearray->Array[j]->score) {
-                element = completearray->Array[i];
+                score_t *element = completearray->Array[i];
                 completearray->Array[i] = completearray->Array[j];
                 completearray->Array[j] = element;
             }
         }
     }
+    // free (element);
     return completearray;
-    for (int c = 0; c < documents; c++) {
-        free(completearray->Array[c]);
-    }
-    free(element);
-    free (completearray);
+
 }
 
 //check how many document match exist
