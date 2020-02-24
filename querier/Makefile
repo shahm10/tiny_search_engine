@@ -45,4 +45,5 @@ clean:
 	rm -f $(PROGS)
 	rm -f stocks
 	rm -f vgcore*
+	rm -f testing.out
 

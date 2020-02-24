@@ -1,6 +1,9 @@
 # CS50 Lab 6
 ## Seung Hyun Hahm, CS50 Winter 2020
 
+### Common
+A short explanation on how to build common.a:
+In order to make a common.a, go to common/ directory and type `make`. 
 ### Querier
 `Querier` reads the index file produced by the `indexer`, and the page fiels produced by the `crawler`, and answers search queries submitted by standard input. 
 
