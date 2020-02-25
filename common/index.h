@@ -12,10 +12,10 @@
 #include <stdbool.h>
 #include <string.h>
 #include <stdlib.h>
-#include "set.h"
-#include "jhash.h"
-#include "hashtable.h"
-#include "counters.h" 
+#include "../libcs50/set.h"
+#include "../libcs50/jhash.h"
+#include "../libcs50/hashtable.h"
+#include "../libcs50/counters.h" 
 #include "pagedir.h"
 #include "word.h"
 
@@ -94,5 +94,8 @@ void index_save (FILE *fp, index_t *index);
  * 
  */
 void indexLoad(FILE *fp, index_t *index);
+
+counters_t *findindex (index_t *index, const char *word);
+
 
 #endif //__INDEX_H

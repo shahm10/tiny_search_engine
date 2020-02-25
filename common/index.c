@@ -10,18 +10,24 @@
 #include <stdbool.h>
 #include <string.h>
 #include <stdlib.h>
-#include "set.h"
-#include "jhash.h"
-#include "hashtable.h"
+#include "../libcs50/set.h"
+#include "../libcs50/jhash.h"
+#include "../libcs50/hashtable.h"
 #include "index.h"
-#include "counters.h" 
+#include "../libcs50/counters.h" 
 #include "pagedir.h"
 #include "word.h"
 
 
 
 /*********** helper functions ***************/
+counters_t *findindex (index_t *index, const char *word);
 
+void printhash(FILE *fp, const char *key, void *item) {
+    //store item as a integer
+    int *number = item;
+    fprintf(fp, "%s-%d", key, *number);
+}
 void print_counters (void *file, const int ID, const int count) {
     FILE *fp = file;
     fprintf (fp, "%d %d ", ID, count);
@@ -106,7 +112,7 @@ void index_build (char *directory, index_t * index) {
         char *result;
 
         while ((result = webpage_getNextWord (word_page, &pos)) != NULL) {
-             if (strlen (result) > 3) {
+             if (strlen (result) >= 3) {
                  word = NormalizeWord (result);
                 index_insert (index, word, ID); 
             }
@@ -132,6 +138,21 @@ void index_delete(index_t *index) {
 void index_save (FILE *fp, index_t *index) {
     //may or may not already exist 
     hashtable_iterate (index->hashtable, fp, print_index);
+}
+
+counters_t *findindex (index_t *index, const char *word) {
+    //returns the counter assoicated with the word 
+    counters_t *item = hashtable_find(index->hashtable, word);
+    //counters_print (item, stdout);
+
+    //counters_print (item, stdout);
+    if (item == NULL) {
+        counters_t *item = counters_new();
+        hashtable_insert (index->hashtable, word, item); 
+    }
+    //counters_print (item, stdout);
+
+    return item;
 }
 
 //index_load
