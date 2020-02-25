@@ -79,5 +79,6 @@ Here, I only test with one `seedURL` for convenience, but have checked multiple 
 3. Test the querier with an incorrect pagedirectory 
 4. Test the querier with a correct input
 5. Test the querier with a text file `incorrectsyntax`
-6. Test the querier with an another text file `testfile`
-7. Run two cases of `querier` with `valgrind` to check for memory leaks.
+6. The `incorrectysyntax` has all the test cases for space, capitalization, and non-alphabets 
+7. Test the querier with an another text file `testfile`
+8. Run two cases of `querier` with `valgrind` to check for memory leaks.

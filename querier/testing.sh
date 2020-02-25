@@ -23,8 +23,9 @@ echo "1. Test it with wrong syntax "
 #3. with non-indexer created files
 ./querier ../data/letters ../data/non-indexer
 
-echo "2. the output of a wrong syntax, from a file incorrectsyntax "
 
+echo "2. the output of a wrong syntax, from a file incorrectsyntax "
+echo "incorrectsyntax file has test cases for spaces, non-characters, and capitalization"
 ./querier ../data/letters ../data/index_letters < incorrectsyntax
 
 echo "3. The output of a wrong and correct syntax, from a file testfile"

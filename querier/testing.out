@@ -6,6 +6,7 @@ Usage: ./querier [pageDirectory] [indexFilename]
 Directory not created from the crawler 
 Indexfile can't be read 
 2. the output of a wrong syntax, from a file incorrectsyntax 
+incorrectsyntax file has test cases for spaces, non-characters, and capitalization
 Error: AND or OR cannot come at front 
 Error: AND or OR cannot come at front 
 Error: AND or OR cannot come at front 
@@ -61,6 +62,23 @@ Error: bad character is in the query!
 
 Query?: 
 Error: bad character is in the query! 
+----------------------------------------
+
+
+Query?: allcaps 
+No documents match. 
+
+----------------------------------------
+
+
+Query?: 
+Error: bad character is in the query! 
+----------------------------------------
+
+
+Query?: space do not matter 
+No documents match. 
+
 ----------------------------------------
 
 
@@ -156,11 +174,11 @@ Score:   1  doc:    6: http://old-www.cs.dartmouth.edu/~cs50/data/tse/letters/C.
 
 
 Query?: 4. sample valgrind check for the query
-==2913522== Memcheck, a memory error detector
-==2913522== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
-==2913522== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
-==2913522== Command: ./querier ../data/letters ../data/index_letters
-==2913522== 
+==2916724== Memcheck, a memory error detector
+==2916724== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==2916724== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
+==2916724== Command: ./querier ../data/letters ../data/index_letters
+==2916724== 
 Query? search and biology 
 No documents match. 
 
@@ -251,20 +269,20 @@ Score:   1  doc:    6: http://old-www.cs.dartmouth.edu/~cs50/data/tse/letters/C.
 ----------------------------------------
 
 
-Query?: ==2913522== 
-==2913522== HEAP SUMMARY:
-==2913522==     in use at exit: 0 bytes in 0 blocks
-==2913522==   total heap usage: 1,137 allocs, 1,137 frees, 276,049 bytes allocated
-==2913522== 
-==2913522== All heap blocks were freed -- no leaks are possible
-==2913522== 
-==2913522== For lists of detected and suppressed errors, rerun with: -s
-==2913522== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
-==2913532== Memcheck, a memory error detector
-==2913532== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
-==2913532== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
-==2913532== Command: ./querier ../data/letters ../data/index_letters
-==2913532== 
+Query?: ==2916724== 
+==2916724== HEAP SUMMARY:
+==2916724==     in use at exit: 0 bytes in 0 blocks
+==2916724==   total heap usage: 1,137 allocs, 1,137 frees, 276,049 bytes allocated
+==2916724== 
+==2916724== All heap blocks were freed -- no leaks are possible
+==2916724== 
+==2916724== For lists of detected and suppressed errors, rerun with: -s
+==2916724== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==2916735== Memcheck, a memory error detector
+==2916735== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==2916735== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
+==2916735== Command: ./querier ../data/letters ../data/index_letters
+==2916735== 
 Error: AND or OR cannot come at front 
 Error: AND or OR cannot come at front 
 Error: AND or OR cannot come at front 
@@ -323,12 +341,29 @@ Error: bad character is in the query!
 ----------------------------------------
 
 
-Query?: ==2913532== 
-==2913532== HEAP SUMMARY:
-==2913532==     in use at exit: 0 bytes in 0 blocks
-==2913532==   total heap usage: 931 allocs, 931 frees, 72,428 bytes allocated
-==2913532== 
-==2913532== All heap blocks were freed -- no leaks are possible
-==2913532== 
-==2913532== For lists of detected and suppressed errors, rerun with: -s
-==2913532== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+Query?: allcaps 
+No documents match. 
+
+----------------------------------------
+
+
+Query?: 
+Error: bad character is in the query! 
+----------------------------------------
+
+
+Query?: space do not matter 
+No documents match. 
+
+----------------------------------------
+
+
+Query?: ==2916735== 
+==2916735== HEAP SUMMARY:
+==2916735==     in use at exit: 0 bytes in 0 blocks
+==2916735==   total heap usage: 969 allocs, 969 frees, 79,867 bytes allocated
+==2916735== 
+==2916735== All heap blocks were freed -- no leaks are possible
+==2916735== 
+==2916735== For lists of detected and suppressed errors, rerun with: -s
+==2916735== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
