@@ -9,3 +9,4 @@ To clean up, run `make clean`.
 
 In indexer/ I included indexsort.awk to use it for my testing
 
+New assumptions are added for `querier.c`. 
