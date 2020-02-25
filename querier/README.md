@@ -4,8 +4,12 @@
 ### Common
 A short explanation on how to build common.a:
 In order to make a common.a, go to common/ directory and type `make`. 
+I also added an `indexfind` function in my `index.c`. 
+
 ### Querier
 `Querier` reads the index file produced by the `indexer`, and the page fiels produced by the `crawler`, and answers search queries submitted by standard input. 
+
+For the testing, I assumed to have a `data/letters` directory that contained all files created from `crawler` and `indexer` and used for my `testing.sh`. These directory files are not committed. 
 
 ### Required Conditions
 1. Needs to execute from a command line with usage syntax `./querier pageDirectory indexFilename`.
