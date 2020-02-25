@@ -1,0 +1,334 @@
+bash testing.sh  
+Hi, this is a testing file for querier.c
+First, assume all data/letters directory have been created for convenience with the same URL given from the lecture demo page provided in a course webpage
+1. Test it with wrong syntax 
+Usage: ./querier [pageDirectory] [indexFilename] 
+Directory not created from the crawler 
+Indexfile can't be read 
+2. the output of a wrong syntax, from a file incorrectsyntax 
+Error: AND or OR cannot come at front 
+Error: AND or OR cannot come at front 
+Error: AND or OR cannot come at front 
+Error: AND or OR cannot come at front 
+AND or OR cannot come at lastAND or OR cannot come at lastand and or can't be together
+and and or can't be together
+and and or can't be together
+Query? and 
+----------------------------------------
+
+
+Query?: or 
+----------------------------------------
+
+
+Query?: and dartmouth 
+----------------------------------------
+
+
+Query?: or dartmouth 
+----------------------------------------
+
+
+Query?: dartmouth college or 
+----------------------------------------
+
+
+Query?: dartmouth college and 
+----------------------------------------
+
+
+Query?: dartmouth college and or computer 
+----------------------------------------
+
+
+Query?: dartmouth college and and computer 
+----------------------------------------
+
+
+Query?: dartmouth college or and computer 
+----------------------------------------
+
+
+Query?: 
+Error: bad character is in the query! 
+----------------------------------------
+
+
+Query?: 
+Error: bad character is in the query! 
+----------------------------------------
+
+
+Query?: 
+Error: bad character is in the query! 
+----------------------------------------
+
+
+Query?: 3. The output of a wrong and correct syntax, from a file testfile
+Query? search and biology 
+No documents match. 
+
+----------------------------------------
+
+
+Query?: tse or for breadth or the first 
+Matches 2 documents (ranked): 
+ 
+Score:   1  doc:    1: http://old-www.cs.dartmouth.edu/~cs50/data/tse/letters/index.html
+Score:   1  doc:    3: http://old-www.cs.dartmouth.edu/~cs50/data/tse/letters/B.html
+
+----------------------------------------
+
+
+Query?: tse this or biology 
+Matches 2 documents (ranked): 
+ 
+Score:   1  doc:    1: http://old-www.cs.dartmouth.edu/~cs50/data/tse/letters/index.html
+Score:   1  doc:    6: http://old-www.cs.dartmouth.edu/~cs50/data/tse/letters/C.html
+
+----------------------------------------
+
+
+Query?: 
+Error: bad character is in the query! 
+----------------------------------------
+
+
+Query?: breadth or eniac this page and computational or eniac 
+Matches 2 documents (ranked): 
+ 
+Score:   1  doc:    3: http://old-www.cs.dartmouth.edu/~cs50/data/tse/letters/B.html
+Score:   1  doc:    4: http://old-www.cs.dartmouth.edu/~cs50/data/tse/letters/E.html
+
+----------------------------------------
+
+
+Query?: algorithm playground computational computational or for 
+Matches 6 documents (ranked): 
+ 
+Score:   1  doc:    1: http://old-www.cs.dartmouth.edu/~cs50/data/tse/letters/index.html
+Score:   1  doc:    2: http://old-www.cs.dartmouth.edu/~cs50/data/tse/letters/A.html
+Score:   1  doc:    3: http://old-www.cs.dartmouth.edu/~cs50/data/tse/letters/B.html
+Score:   1  doc:    4: http://old-www.cs.dartmouth.edu/~cs50/data/tse/letters/E.html
+Score:   1  doc:    5: http://old-www.cs.dartmouth.edu/~cs50/data/tse/letters/D.html
+Score:   1  doc:    6: http://old-www.cs.dartmouth.edu/~cs50/data/tse/letters/C.html
+
+----------------------------------------
+
+
+Query?: breadth 
+Matches 1 documents (ranked): 
+ 
+Score:   1  doc:    3: http://old-www.cs.dartmouth.edu/~cs50/data/tse/letters/B.html
+
+----------------------------------------
+
+
+Query?: home depth or first 
+Matches 2 documents (ranked): 
+ 
+Score:   2  doc:    5: http://old-www.cs.dartmouth.edu/~cs50/data/tse/letters/D.html
+Score:   1  doc:    3: http://old-www.cs.dartmouth.edu/~cs50/data/tse/letters/B.html
+
+----------------------------------------
+
+
+Query?: for 
+Matches 6 documents (ranked): 
+ 
+Score:   1  doc:    1: http://old-www.cs.dartmouth.edu/~cs50/data/tse/letters/index.html
+Score:   1  doc:    2: http://old-www.cs.dartmouth.edu/~cs50/data/tse/letters/A.html
+Score:   1  doc:    3: http://old-www.cs.dartmouth.edu/~cs50/data/tse/letters/B.html
+Score:   1  doc:    4: http://old-www.cs.dartmouth.edu/~cs50/data/tse/letters/E.html
+Score:   1  doc:    5: http://old-www.cs.dartmouth.edu/~cs50/data/tse/letters/D.html
+Score:   1  doc:    6: http://old-www.cs.dartmouth.edu/~cs50/data/tse/letters/C.html
+
+----------------------------------------
+
+
+Query?: tse or biology or this and this and for 
+Matches 2 documents (ranked): 
+ 
+Score:   2  doc:    1: http://old-www.cs.dartmouth.edu/~cs50/data/tse/letters/index.html
+Score:   1  doc:    6: http://old-www.cs.dartmouth.edu/~cs50/data/tse/letters/C.html
+
+----------------------------------------
+
+
+Query?: 4. sample valgrind check for the query
+==2913522== Memcheck, a memory error detector
+==2913522== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==2913522== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
+==2913522== Command: ./querier ../data/letters ../data/index_letters
+==2913522== 
+Query? search and biology 
+No documents match. 
+
+----------------------------------------
+
+
+Query?: tse or for breadth or the first 
+Matches 2 documents (ranked): 
+ 
+Score:   1  doc:    1: http://old-www.cs.dartmouth.edu/~cs50/data/tse/letters/index.html
+Score:   1  doc:    3: http://old-www.cs.dartmouth.edu/~cs50/data/tse/letters/B.html
+
+----------------------------------------
+
+
+Query?: tse this or biology 
+Matches 2 documents (ranked): 
+ 
+Score:   1  doc:    1: http://old-www.cs.dartmouth.edu/~cs50/data/tse/letters/index.html
+Score:   1  doc:    6: http://old-www.cs.dartmouth.edu/~cs50/data/tse/letters/C.html
+
+----------------------------------------
+
+
+Query?: 
+Error: bad character is in the query! 
+----------------------------------------
+
+
+Query?: breadth or eniac this page and computational or eniac 
+Matches 2 documents (ranked): 
+ 
+Score:   1  doc:    3: http://old-www.cs.dartmouth.edu/~cs50/data/tse/letters/B.html
+Score:   1  doc:    4: http://old-www.cs.dartmouth.edu/~cs50/data/tse/letters/E.html
+
+----------------------------------------
+
+
+Query?: algorithm playground computational computational or for 
+Matches 6 documents (ranked): 
+ 
+Score:   1  doc:    1: http://old-www.cs.dartmouth.edu/~cs50/data/tse/letters/index.html
+Score:   1  doc:    2: http://old-www.cs.dartmouth.edu/~cs50/data/tse/letters/A.html
+Score:   1  doc:    3: http://old-www.cs.dartmouth.edu/~cs50/data/tse/letters/B.html
+Score:   1  doc:    4: http://old-www.cs.dartmouth.edu/~cs50/data/tse/letters/E.html
+Score:   1  doc:    5: http://old-www.cs.dartmouth.edu/~cs50/data/tse/letters/D.html
+Score:   1  doc:    6: http://old-www.cs.dartmouth.edu/~cs50/data/tse/letters/C.html
+
+----------------------------------------
+
+
+Query?: breadth 
+Matches 1 documents (ranked): 
+ 
+Score:   1  doc:    3: http://old-www.cs.dartmouth.edu/~cs50/data/tse/letters/B.html
+
+----------------------------------------
+
+
+Query?: home depth or first 
+Matches 2 documents (ranked): 
+ 
+Score:   2  doc:    5: http://old-www.cs.dartmouth.edu/~cs50/data/tse/letters/D.html
+Score:   1  doc:    3: http://old-www.cs.dartmouth.edu/~cs50/data/tse/letters/B.html
+
+----------------------------------------
+
+
+Query?: for 
+Matches 6 documents (ranked): 
+ 
+Score:   1  doc:    1: http://old-www.cs.dartmouth.edu/~cs50/data/tse/letters/index.html
+Score:   1  doc:    2: http://old-www.cs.dartmouth.edu/~cs50/data/tse/letters/A.html
+Score:   1  doc:    3: http://old-www.cs.dartmouth.edu/~cs50/data/tse/letters/B.html
+Score:   1  doc:    4: http://old-www.cs.dartmouth.edu/~cs50/data/tse/letters/E.html
+Score:   1  doc:    5: http://old-www.cs.dartmouth.edu/~cs50/data/tse/letters/D.html
+Score:   1  doc:    6: http://old-www.cs.dartmouth.edu/~cs50/data/tse/letters/C.html
+
+----------------------------------------
+
+
+Query?: tse or biology or this and this and for 
+Matches 2 documents (ranked): 
+ 
+Score:   2  doc:    1: http://old-www.cs.dartmouth.edu/~cs50/data/tse/letters/index.html
+Score:   1  doc:    6: http://old-www.cs.dartmouth.edu/~cs50/data/tse/letters/C.html
+
+----------------------------------------
+
+
+Query?: ==2913522== 
+==2913522== HEAP SUMMARY:
+==2913522==     in use at exit: 0 bytes in 0 blocks
+==2913522==   total heap usage: 1,137 allocs, 1,137 frees, 276,049 bytes allocated
+==2913522== 
+==2913522== All heap blocks were freed -- no leaks are possible
+==2913522== 
+==2913522== For lists of detected and suppressed errors, rerun with: -s
+==2913522== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==2913532== Memcheck, a memory error detector
+==2913532== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==2913532== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
+==2913532== Command: ./querier ../data/letters ../data/index_letters
+==2913532== 
+Error: AND or OR cannot come at front 
+Error: AND or OR cannot come at front 
+Error: AND or OR cannot come at front 
+Error: AND or OR cannot come at front 
+AND or OR cannot come at lastAND or OR cannot come at lastand and or can't be together
+and and or can't be together
+and and or can't be together
+Query? and 
+----------------------------------------
+
+
+Query?: or 
+----------------------------------------
+
+
+Query?: and dartmouth 
+----------------------------------------
+
+
+Query?: or dartmouth 
+----------------------------------------
+
+
+Query?: dartmouth college or 
+----------------------------------------
+
+
+Query?: dartmouth college and 
+----------------------------------------
+
+
+Query?: dartmouth college and or computer 
+----------------------------------------
+
+
+Query?: dartmouth college and and computer 
+----------------------------------------
+
+
+Query?: dartmouth college or and computer 
+----------------------------------------
+
+
+Query?: 
+Error: bad character is in the query! 
+----------------------------------------
+
+
+Query?: 
+Error: bad character is in the query! 
+----------------------------------------
+
+
+Query?: 
+Error: bad character is in the query! 
+----------------------------------------
+
+
+Query?: ==2913532== 
+==2913532== HEAP SUMMARY:
+==2913532==     in use at exit: 0 bytes in 0 blocks
+==2913532==   total heap usage: 931 allocs, 931 frees, 72,428 bytes allocated
+==2913532== 
+==2913532== All heap blocks were freed -- no leaks are possible
+==2913532== 
+==2913532== For lists of detected and suppressed errors, rerun with: -s
+==2913532== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)

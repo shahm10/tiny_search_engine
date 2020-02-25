@@ -72,12 +72,12 @@ where `indexFilename` is the pathname of a file produced by the Indexer.
 
 *Integration testing*. Assemble the querier and test it as a whole using `testing.sh` In each case, examine the ouput carefully to be sure they print the correct query. 
 Here, I do not include the test with wiki because it takes too much time. 
+Here, I only test with one `seedURL` for convenience, but have checked multiple times with other `seedURL`. 
 
 1. Test the program with various forms of incorrect command-line arguments to ensure theat its command-line parsing, and validation of those parameters, works correctly.
 2. Test the querier with a non-valid arguments
 3. Test the querier with an incorrect pagedirectory 
 4. Test the querier with a correct input
-5. Test the `indextest` with a correct input
-6. Compare the file output by calling `indexsort.awk`
-7. Check if two created files match or fail to match
-8. Run two cases of `indexer` and `indextest` with `myvalgrind` to check for memory leaks
+5. Test the querier with a text file `incorrectsyntax`
+6. Test the querier with an another text file `testfile`
+7. Run two cases of `querier` with `valgrind` to check for memory leaks.

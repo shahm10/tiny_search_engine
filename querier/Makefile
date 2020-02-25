@@ -21,7 +21,7 @@ LIBS = $C/common.a $L/libcs50-given.a
 #FLAGS = # -DAPPTEST # - DMEMTEST
 # above are the macros 
 
-CFLAGS = -Wall -pedantic -std=c11 -ggdb $(TESTING) -I$L -I$C
+CFLAGS = -Wall -pedantic -std=c11 -ggdb $(TESTING) -I $L -I $C
 CC = gcc
 MAKE = make
 
@@ -36,8 +36,8 @@ $(PROGS): $(OBJS) $(LIBS)
 ######crawler dependencies#####
 querier.o: $(LIBS)
 #bash -v = verbose 
-test: $(PROGS) testing.sh
-	bash testing.sh 
+test: 
+	bash testing.sh  
 
 clean:
 	rm -f core 
@@ -45,5 +45,4 @@ clean:
 	rm -f $(PROGS)
 	rm -f stocks
 	rm -f vgcore*
-	rm -f testing.out
 
